@@ -1,5 +1,8 @@
+
+// URL base de la API
 const API_BASE = (window.API_BASE || 'http://localhost:3000') + '/api/medicamentos';
 
+// Renderizar filas de la tabla con datos obtenidos
 function renderRows(items) {
     const $tbody = $('#tablaMedicamentos tbody');
     $tbody.empty();
@@ -23,17 +26,20 @@ function renderRows(items) {
     });
 }
 
+// Se obtiene medicamentos desde la API con filtros opcionales
 async function fetchMedicamentos(params = {}) {
     const query = new URLSearchParams(params).toString();
     const res = await fetch(`${API_BASE}${query ? '?' + query : ''}`);
     return await res.json();
 }
 
+// Carga todos los medicamentos
 async function cargar() {
     const data = await fetchMedicamentos();
     renderRows(data);
 }
 
+// Busca medicamentos según filtros ingresados
 async function buscar() {
     const nombre = $('#filtroNombre').val().trim();
     const categoria = $('#filtroCategoria').val().trim();
@@ -46,15 +52,19 @@ async function buscar() {
     renderRows(data);
 }
 
+// Botones de búsqueda y recarga
 $('#btnBuscar').on('click', (e) => {e.preventDefault(); buscar(); });
 $('#btnRefrescar').on('click', (e) => {e.preventDefault(); cargar(); });
 
+
+// Limpia el formulario
 $('#btnLimpiar').on('click', () => {
     $('#id').val('');
     $('#formMedicamento')[0].reset();
     $('#nombre').focus();
 });
 
+// Envía el formulario (crear o actualizar medicamento)
 $('#formMedicamento').on('submit', async function(e) {
     e.preventDefault();
     const body = {
@@ -82,6 +92,7 @@ $('#formMedicamento').on('submit', async function(e) {
     $('#id').val('');
 });
 
+// Carga los datos del medicamento seleccionado en el formulario
 async function editar(id) {
     const res = await fetch(`${API_BASE}/${id}`);
     if (!res.ok) return alert('No encontrado');
@@ -94,6 +105,7 @@ async function editar(id) {
     window.scrollTo({top: 0, behavior: 'smooth'});
 }
 
+// Elimina un medicamento
 async function eliminar (id) {
     if (!confirm('¿Eliminar este medicamento?')) return;
     const res = await fetch(`${API_BASE}/${id}`, { method: 'DELETE' });
@@ -101,4 +113,5 @@ async function eliminar (id) {
     await cargar();
 }
 
+// Carga inicial al abrir la página
 document.addEventListener('DOMContentLoaded', cargar);
