@@ -53,4 +53,5 @@ if (process.env.RUN_MIGRATIONS === "true") {
     }
 }
 
+// Exportar conexión
 export default pool;

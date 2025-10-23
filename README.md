@@ -53,18 +53,18 @@ Abre el archivo 'frontend/index.html' en tu navegador
 -Configuración de la base de datos
 
 CREATE TABLE IF NOT EXISTS medicamentos (
-  id SERIAL PRIMARY KEY,
-  nombre VARCHAR(255) NOT NULL,
-  categoria VARCHAR(100) NOT NULL,
-  cantidad INT NOT NULL CHECK (cantidad > 0),
-  fecha_expiracion DATE NOT NULL
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL UNIQUE,
+    categoria VARCHAR(100) NOT NULL,
+    cantidad INT NOT NULL CHECK (cantidad >= 0),
+    fecha_expiracion DATE NOT NULL
 );
 
 INSERT INTO medicamentos (nombre, categoria, cantidad, fecha_expiracion) VALUES
 ('Paracetamol 500mg', 'Analgesico', 50, '2026-01-15'),
 ('Ibuprofeno 400mg', 'Antiinflamatorio', 30, '2027-06-30'),
 ('Amoxicilina 500mg', 'Antibiotico', 100, '2026-11-20')
-ON CONFLICT DO NOTHING;}
+ON CONFLICT (nombre) DO NOTHING;
 
 Verifica:
 SELECT * FROM medicamentos;
